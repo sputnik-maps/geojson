@@ -6,8 +6,7 @@ Go package to easy and quick create datastructure which can be serialized to geo
 INSTALATION
 ---------------------
 
->`go get https://github.com/kpawlik/geojson`
->`go install https://github.com/kpawlik/geojson`
+>`go get github.com/sputnik-maps/geojson`
 
 USAGE EXAMPLE
 ---------------------
@@ -17,7 +16,7 @@ USAGE EXAMPLE
 
     import (
         "fmt"
-        gj "github.com/kpawlik/geojson"
+        gj "github.com/sputnik-maps/geojson"
     )
 
     func main() {
