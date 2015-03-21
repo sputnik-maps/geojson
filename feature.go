@@ -229,7 +229,7 @@ func parseGeometry(gi interface{}) (geom Geometry, err error) {
 		case "MultiPolygon":
 			return parseMultiPolygon(coord)
 		case "GeometryCollection":
-			return parseGeometryCollection(coord)
+			return parseGeometryCollection(g["geometries"])
 		default:
 			err = errors.New(fmt.Sprintf("ParseError: Unknown geometry type %s", typ))
 			break
@@ -245,7 +245,12 @@ func parseGeometryCollection(obj interface{}) (gc *GeometryCollection, err error
 		return
 	} else {
 		for i := 0; i < len(si); i++ {
-			gc.AddGeometry(si[i])
+			geometry, err := parseGeometry(si[i])
+			if err != nil {
+				return nil, err
+			}
+			//gc.AddGeometry(si[i])
+			gc.Geometries = append(gc.Geometries, geometry)
 		}
 	}
 	return
