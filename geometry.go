@@ -68,11 +68,11 @@ type Point struct {
 // Add geometry to coordinates.
 // New value will replace existing
 func (t *Point) AddGeometry(g interface{}) error {
-	if c, ok := g.(Coordinate); ok {
-		t.Coordinates = c
-	} else {
+	c, ok := g.(Coordinate)
+	if !ok {
 		return fmt.Errorf("AssertionError: %v to %v", g, "Coordinate")
 	}
+	t.Coordinates = c
 	return nil
 }
 
