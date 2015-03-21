@@ -103,110 +103,102 @@ func parseCoordinate(c interface{}) (coord Coordinate, err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("%v", e)
-			return
 		}
 	}()
 	coordinate, ok := c.([]interface{})
 	if !ok || len(coordinate) != 2 {
-		err = fmt.Errorf("Error unmarshal %v to coordinates", c)
-		return
+		return Coordinate{}, fmt.Errorf("Error unmarshal %v to coordinates", c)
 	}
 	x := Coord(coordinate[0])
 	y := Coord(coordinate[1])
-	coord = Coordinate{x, y}
-	return
+	return Coordinate{x, y}, nil
 }
 
-func parseCoordinates(obj interface{}) (coords Coordinates, err error) {
+func parseCoordinates(obj interface{}) (Coordinates, error) {
 	c, ok := obj.([]interface{})
 	if !ok || len(c) < 1 {
-		err = fmt.Errorf("ParseErrr: Coordinates parse error, %v", obj)
-		return
+		return nil, fmt.Errorf("ParseErrr: Coordinates parse error, %v", obj)
 	}
-	coords = make(Coordinates, len(c))
+	coords := make(Coordinates, len(c))
 	for i, v := range c {
+		var err error
 		if coords[i], err = parseCoordinate(v); err != nil {
-			return
+			return nil, err
 		}
 	}
-	return
+	return coords, nil
 }
 
-func parseMultiLine(obj interface{}) (coords MultiLine, err error) {
+func parseMultiLine(obj interface{}) (MultiLine, error) {
 	c, ok := obj.([]interface{})
 	if !ok || len(c) < 1 {
-		err = fmt.Errorf("ParseErrr: MultiLine parse error, %v", obj)
-		return
+		return nil, fmt.Errorf("ParseErrr: MultiLine parse error, %v", obj)
 	}
-	coords = make(MultiLine, len(c), len(c))
+	coords := make(MultiLine, len(c))
 	for i, v := range c {
+		var err error
 		if coords[i], err = parseCoordinates(v); err != nil {
-			return
+			return nil, err
 		}
 	}
-	return
+	return coords, nil
 }
 
-func parsePoint(obj interface{}) (p *Point, err error) {
+func parsePoint(obj interface{}) (*Point, error) {
 	c, err := parseCoordinate(obj)
 	if err != nil {
-		return
+		return nil, err
 	}
-	p = NewPoint(c)
-	return
+	return NewPoint(c), nil
 }
 
-func parseLineString(obj interface{}) (ls *LineString, err error) {
-	var cc Coordinates
-	if cc, err = parseCoordinates(obj); err != nil {
-		return
+func parseLineString(obj interface{}) (*LineString, error) {
+	cc, err := parseCoordinates(obj)
+	if err != nil {
+		return nil, err
 	}
-	ls = NewLineString(cc)
-	return
+	return NewLineString(cc), nil
 }
 
-func parseMultiPoint(obj interface{}) (mp *MultiPoint, err error) {
-	var cc Coordinates
-	if cc, err = parseCoordinates(obj); err != nil {
-		return
+func parseMultiPoint(obj interface{}) (*MultiPoint, error) {
+	cc, err := parseCoordinates(obj)
+	if err != nil {
+		return nil, err
 	}
-	mp = NewMultiPoint(cc)
-	return
+	return NewMultiPoint(cc), nil
 }
 
-func parseMultiLineString(obj interface{}) (mls *MultiLineString, err error) {
-	var ml MultiLine
-	if ml, err = parseMultiLine(obj); err != nil {
-		return
+func parseMultiLineString(obj interface{}) (*MultiLineString, error) {
+	ml, err := parseMultiLine(obj)
+	if err != nil {
+		return nil, err
 	}
-	mls = NewMultiLineString(ml)
-	return
+	return NewMultiLineString(ml), nil
 }
 
-func parsePolygon(obj interface{}) (pol *Polygon, err error) {
-	var pl MultiLine
-	if pl, err = parseMultiLine(obj); err != nil {
-		return
+func parsePolygon(obj interface{}) (*Polygon, error) {
+	pl, err := parseMultiLine(obj)
+	if err != nil {
+		return nil, err
 	}
-	pol = NewPolygon(pl)
-	return
+	return NewPolygon(pl), nil
 }
 
-func parseMultiPolygon(obj interface{}) (mpol *MultiPolygon, err error) {
+func parseMultiPolygon(obj interface{}) (*MultiPolygon, error) {
 	var ml []MultiLine
 	si, ok := obj.([]interface{})
 	if !ok {
-		err = errors.New("Parse Error: parse multi polygon error")
-		return
+		return nil, errors.New("Parse Error: parse multi polygon error")
 	}
 	ml = make([]MultiLine, len(si), len(si))
+
 	for i, slice := range si {
+		var err error
 		if ml[i], err = parseMultiLine(slice); err != nil {
-			return
+			return nil, err
 		}
 	}
-	mpol = NewMultiPolygon(ml)
-	return
+	return NewMultiPolygon(ml), nil
 }
 
 func parseGeometry(gi interface{}) (geom Geometry, err error) {
@@ -235,12 +227,11 @@ func parseGeometry(gi interface{}) (geom Geometry, err error) {
 	return geom, err
 }
 
-func parseGeometryCollection(obj interface{}) (gc *GeometryCollection, err error) {
-	gc = NewGeometryCollection()
+func parseGeometryCollection(obj interface{}) (*GeometryCollection, error) {
+	gc := NewGeometryCollection()
 	si, ok := obj.([]interface{})
 	if !ok {
-		err = errors.New("ParseError: Error durring parse geometry collection")
-		return
+		return nil, errors.New("ParseError: Error durring parse geometry collection")
 	}
 	for i := 0; i < len(si); i++ {
 		geometry, err := parseGeometry(si[i])
@@ -250,5 +241,5 @@ func parseGeometryCollection(obj interface{}) (gc *GeometryCollection, err error
 		//gc.AddGeometry(si[i])
 		gc.Geometries = append(gc.Geometries, geometry)
 	}
-	return
+	return gc, nil
 }

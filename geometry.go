@@ -16,17 +16,16 @@ type CoordType float64
 func Coord(obj interface{}) (ct CoordType) {
 	switch num := obj.(type) {
 	case float64:
-		ct = CoordType(num)
+		return CoordType(num)
 	case int:
-		ct = CoordType(num)
+		return CoordType(num)
 	case float32:
-		ct = CoordType(num)
+		return CoordType(num)
 	case int64:
-		ct = CoordType(num)
+		return CoordType(num)
 	default:
 		panic(fmt.Sprintf("Error: Cannot parse object: '%v' type: '%v' to CoordType!", obj, reflect.TypeOf(obj)))
 	}
-	return
 }
 
 // Type to represent one coordinate (x,y).

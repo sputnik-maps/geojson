@@ -1,5 +1,5 @@
 /*
-Package contains funcionality to simple and fast 
+Package contains funcionality to simple and fast
 create objects collection to serialize them as GeoJSON data.
 */
 package geojson
@@ -10,13 +10,12 @@ import (
 )
 
 // Marshal object to json string representation
-func Marshal(object interface{}) (data string, err error) {
-	if t, err := json.Marshal(object); err != nil {
-		data = ""
-	} else {
-		data = string(t)
+func Marshal(object interface{}) (string, error) {
+	data, err := json.Marshal(object)
+	if err != nil {
+		return "", err
 	}
-	return
+	return string(data), err
 }
 
 func Register() {
