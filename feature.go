@@ -201,30 +201,27 @@ func parseMultiPolygon(obj interface{}) (*MultiPolygon, error) {
 	return NewMultiPolygon(ml), nil
 }
 
-func parseGeometry(gi interface{}) (geom Geometry, err error) {
-	switch g := gi.(type) {
-	case map[string]interface{}:
-		coord := g["coordinates"]
-		switch typ := g["type"]; typ {
-		case "Point":
-			return parsePoint(coord)
-		case "LineString":
-			return parseLineString(coord)
-		case "MultiPoint":
-			return parseMultiPoint(coord)
-		case "MultiLineString":
-			return parseMultiLineString(coord)
-		case "Polygon":
-			return parsePolygon(coord)
-		case "MultiPolygon":
-			return parseMultiPolygon(coord)
-		case "GeometryCollection":
-			return parseGeometryCollection(g["geometries"])
-		default:
-			err = fmt.Errorf("ParseError: Unknown geometry type %s", typ)
-		}
+func parseGeometry(gi interface{}) (Geometry, error) {
+	g := gi.(map[string]interface{})
+	coord := g["coordinates"]
+	switch typ := g["type"]; typ {
+	case "Point":
+		return parsePoint(coord)
+	case "LineString":
+		return parseLineString(coord)
+	case "MultiPoint":
+		return parseMultiPoint(coord)
+	case "MultiLineString":
+		return parseMultiLineString(coord)
+	case "Polygon":
+		return parsePolygon(coord)
+	case "MultiPolygon":
+		return parseMultiPolygon(coord)
+	case "GeometryCollection":
+		return parseGeometryCollection(g["geometries"])
+	default:
+		return nil, fmt.Errorf("ParseError: Unknown geometry type %s", typ)
 	}
-	return geom, err
 }
 
 func parseGeometryCollection(obj interface{}) (*GeometryCollection, error) {
