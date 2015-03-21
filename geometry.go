@@ -17,16 +17,12 @@ func Coord(obj interface{}) (ct CoordType) {
 	switch num := obj.(type) {
 	case float64:
 		ct = CoordType(num)
-		break
 	case int:
 		ct = CoordType(num)
-		break
 	case float32:
 		ct = CoordType(num)
-		break
 	case int64:
 		ct = CoordType(num)
-		break
 	default:
 		panic(fmt.Sprintf("Error: Cannot parse object: '%v' type: '%v' to CoordType!", obj, reflect.TypeOf(obj)))
 	}
@@ -105,10 +101,8 @@ func (t *MultiPoint) AddGeometry(g interface{}) error {
 	switch c := g.(type) {
 	case Coordinate:
 		t.AddCoordinates(c)
-		break
 	case Coordinates:
 		t.AddCoordinates(c...)
-		break
 	default:
 		return fmt.Errorf("AssertionError %v", g)
 	}
@@ -157,10 +151,8 @@ func (t *LineString) AddGeometry(g interface{}) error {
 	switch c := g.(type) {
 	case Coordinate:
 		t.AddCoordinates(c)
-		break
 	case Coordinates:
 		t.AddCoordinates(c...)
-		break
 	default:
 		return fmt.Errorf("AssertionError %v", g)
 	}
@@ -203,10 +195,8 @@ func (t *MultiLineString) AddGeometry(g interface{}) error {
 	switch c := g.(type) {
 	case MultiLine:
 		t.AddCoordinates(c...)
-		break
 	case Coordinates:
 		t.AddCoordinates(c)
-		break
 	default:
 		return fmt.Errorf("AssertionError %v", g)
 	}
@@ -256,10 +246,8 @@ func (t *Polygon) AddGeometry(g interface{}) error {
 	switch c := g.(type) {
 	case MultiLine:
 		t.AddCoordinates(c...)
-		break
 	case Coordinates:
 		t.AddCoordinates(c)
-		break
 	default:
 		return fmt.Errorf("AssertionError %v", g)
 	}
@@ -315,10 +303,8 @@ func (t *MultiPolygon) AddGeometry(g interface{}) error {
 	switch c := g.(type) {
 	case []MultiLine:
 		t.AddCoordinates(c...)
-		break
 	case MultiLine:
 		t.AddCoordinates(c)
-		break
 	default:
 		return fmt.Errorf("AssertionError %v", g)
 	}
@@ -378,11 +364,9 @@ func (t *GeometryCollection) AddGeometry(g interface{}) error {
 		}
 		t.AddGeometries(tmp...)
 		//t.AddGeometries(c...)
-		break
 	case interface{}:
 		t.AddGeometries(c.(Geometry))
 		//t.AddGeometries(c)
-		break
 	default:
 		return fmt.Errorf("AssertionError %v", g)
 	}

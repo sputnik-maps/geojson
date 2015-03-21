@@ -230,7 +230,6 @@ func parseGeometry(gi interface{}) (geom Geometry, err error) {
 			return parseGeometryCollection(g["geometries"])
 		default:
 			err = fmt.Errorf("ParseError: Unknown geometry type %s", typ)
-			break
 		}
 	}
 	return geom, err
