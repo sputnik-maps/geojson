@@ -9,12 +9,12 @@ import (
 type BoundingBox []float64
 
 // A GeoJSON object with the type "Feature" is a feature object.
-// - A feature object must have a member with the name "geometry". 
+// - A feature object must have a member with the name "geometry".
 //	 The value of the geometry member is a geometry object or a JSON null value.
-// - A feature object must have a member with the name "properties". 
-//   The value of the properties member is an object (any JSON object 
+// - A feature object must have a member with the name "properties".
+//   The value of the properties member is an object (any JSON object
 //   or a JSON null value).
-// - If a feature has a commonly used identifier, that identifier should be 
+// - If a feature has a commonly used identifier, that identifier should be
 //   included as a member of the feature object with the name "id".
 type Feature struct {
 	Type       string                 `json:"type"`
@@ -30,7 +30,7 @@ func (t *Feature) GetGeometry() (Geometry, error) {
 	return parseGeometry(gi)
 }
 
-// Factory constructor method 
+// Factory constructor method
 func NewFeature(geom Geometry, properties map[string]interface{},
 	id interface{}) *Feature {
 	return &Feature{Type: "Feature",
@@ -39,8 +39,8 @@ func NewFeature(geom Geometry, properties map[string]interface{},
 		Id:         id}
 }
 
-// An object of type "FeatureCollection" must have a member with the name 
-// "features". The value corresponding to "features" is an array. 
+// An object of type "FeatureCollection" must have a member with the name
+// "features". The value corresponding to "features" is an array.
 // Each element in the array is a Feature object.
 type FeatureCollection struct {
 	Type     string      `json:"type"`
@@ -61,8 +61,8 @@ func NewFeatureCollection(features []*Feature) *FeatureCollection {
 	return &FeatureCollection{Type: "FeatureCollection", Features: features}
 }
 
-// The coordinate reference system (CRS) of a GeoJSON object 
-// is determined by its "crs" member. 
+// The coordinate reference system (CRS) of a GeoJSON object
+// is determined by its "crs" member.
 type CRS struct {
 	Type       string            `json:"type"`
 	Properties map[string]string `json:"properties"`
@@ -239,7 +239,7 @@ func parseGeometry(gi interface{}) (geom Geometry, err error) {
 }
 
 func parseGeometryCollection(obj interface{}) (gc *GeometryCollection, err error) {
-	gc = NewGeometryCollection([]interface{}{})
+	gc = NewGeometryCollection()
 	if si, ok := obj.([]interface{}); !ok {
 		err = errors.New("ParseError: Error durring parse geometry collection")
 		return

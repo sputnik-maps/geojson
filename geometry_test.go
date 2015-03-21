@@ -225,13 +225,15 @@ func TestGeometryCollection(t *testing.T) {
 	res = strings.Join(ress, "")
 	p := NewPoint(Coordinate{100, 0})
 	ls := NewLineString(Coordinates{{101, 0.1}, {102.2, 1}})
-	m = NewGeometryCollection([]interface{}{p, ls})
+	m = NewGeometryCollection(p, ls)
 	tt.AssertMarshal(m, res, "1")
-	m = NewGeometryCollection(nil)
+
+	m = NewGeometryCollection()
 	m.AddGeometry(p)
 	m.AddGeometry(ls)
 	tt.AssertMarshal(m, res, "2")
-	m = NewGeometryCollection(nil)
+
+	m = NewGeometryCollection()
 	err = m.AddGeometry(nil)
 	tt.AssertNeq(err, nil, "Should raise assertion error")
 }
