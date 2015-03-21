@@ -31,8 +31,7 @@ func (t *Feature) GetGeometry() (Geometry, error) {
 }
 
 // Factory constructor method
-func NewFeature(geom Geometry, properties map[string]interface{},
-	id interface{}) *Feature {
+func NewFeature(geom Geometry, properties map[string]interface{}, id interface{}) *Feature {
 	return &Feature{Type: "Feature",
 		Geometry:   geom,
 		Properties: properties,
@@ -103,13 +102,13 @@ func NewLinkedCRS(href, typ string) *CRS {
 func parseCoordinate(c interface{}) (coord Coordinate, err error) {
 	defer func() {
 		if e := recover(); e != nil {
-			err = errors.New(fmt.Sprintf("%v", e))
+			err = fmt.Errorf("%v", e)
 			return
 		}
 	}()
 	coordinate, ok := c.([]interface{})
 	if !ok || len(coordinate) != 2 {
-		err = errors.New(fmt.Sprintf("Error unmarshal %v to coordinates", c))
+		err = fmt.Errorf("Error unmarshal %v to coordinates", c)
 		return
 	}
 	x := Coord(coordinate[0])
@@ -120,7 +119,7 @@ func parseCoordinate(c interface{}) (coord Coordinate, err error) {
 
 func parseCoordinates(obj interface{}) (coords Coordinates, err error) {
 	if c, ok := obj.([]interface{}); !ok || len(c) < 1 {
-		err = errors.New(fmt.Sprintf("ParseErrr: Coordinates parse error, %v", obj))
+		err = fmt.Errorf("ParseErrr: Coordinates parse error, %v", obj)
 		return
 	} else {
 		coords = make(Coordinates, len(c), len(c))
@@ -135,7 +134,7 @@ func parseCoordinates(obj interface{}) (coords Coordinates, err error) {
 
 func parseMultiLine(obj interface{}) (coords MultiLine, err error) {
 	if c, ok := obj.([]interface{}); !ok || len(c) < 1 {
-		err = errors.New(fmt.Sprintf("ParseErrr: MultiLine parse error, %v", obj))
+		err = fmt.Errorf("ParseErrr: MultiLine parse error, %v", obj)
 		return
 	} else {
 		coords = make(MultiLine, len(c), len(c))
@@ -231,7 +230,7 @@ func parseGeometry(gi interface{}) (geom Geometry, err error) {
 		case "GeometryCollection":
 			return parseGeometryCollection(g["geometries"])
 		default:
-			err = errors.New(fmt.Sprintf("ParseError: Unknown geometry type %s", typ))
+			err = fmt.Errorf("ParseError: Unknown geometry type %s", typ)
 			break
 		}
 	}

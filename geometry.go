@@ -1,7 +1,6 @@
 package geojson
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 )
@@ -72,8 +71,7 @@ func (t *Point) AddGeometry(g interface{}) error {
 	if c, ok := g.(Coordinate); ok {
 		t.Coordinates = c
 	} else {
-		return errors.New(fmt.Sprintf("AssertionError: %v to %v",
-			g, "Coordinate"))
+		return fmt.Errorf("AssertionError: %v to %v", g, "Coordinate")
 	}
 	return nil
 }
@@ -112,7 +110,7 @@ func (t *MultiPoint) AddGeometry(g interface{}) error {
 		t.AddCoordinates(c...)
 		break
 	default:
-		return errors.New(fmt.Sprintf("AssertionError %v", g))
+		return fmt.Errorf("AssertionError %v", g)
 	}
 	return nil
 }
@@ -164,7 +162,7 @@ func (t *LineString) AddGeometry(g interface{}) error {
 		t.AddCoordinates(c...)
 		break
 	default:
-		return errors.New(fmt.Sprintf("AssertionError %v", g))
+		return fmt.Errorf("AssertionError %v", g)
 	}
 	return nil
 }
@@ -210,7 +208,7 @@ func (t *MultiLineString) AddGeometry(g interface{}) error {
 		t.AddCoordinates(c)
 		break
 	default:
-		return errors.New(fmt.Sprintf("AssertionError %v", g))
+		return fmt.Errorf("AssertionError %v", g)
 	}
 	return nil
 }
@@ -263,7 +261,7 @@ func (t *Polygon) AddGeometry(g interface{}) error {
 		t.AddCoordinates(c)
 		break
 	default:
-		return errors.New(fmt.Sprintf("AssertionError %v", g))
+		return fmt.Errorf("AssertionError %v", g)
 	}
 	return nil
 }
@@ -322,7 +320,7 @@ func (t *MultiPolygon) AddGeometry(g interface{}) error {
 		t.AddCoordinates(c)
 		break
 	default:
-		return errors.New(fmt.Sprintf("AssertionError %v", g))
+		return fmt.Errorf("AssertionError %v", g)
 	}
 	return nil
 }
@@ -386,7 +384,7 @@ func (t *GeometryCollection) AddGeometry(g interface{}) error {
 		//t.AddGeometries(c)
 		break
 	default:
-		return errors.New(fmt.Sprintf("AssertionError %v", g))
+		return fmt.Errorf("AssertionError %v", g)
 	}
 	return nil
 }
