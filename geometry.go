@@ -357,15 +357,11 @@ func (t *GeometryCollection) AddGeometries(g ...Geometry) {
 func (t *GeometryCollection) AddGeometry(g interface{}) error {
 	switch c := g.(type) {
 	case []interface{}:
-		tmp := make([]Geometry, len(c))
 		for i := range c {
-			tmp[i] = c[i].(Geometry)
+			t.Geometries = append(t.Geometries, c[i].(Geometry))
 		}
-		t.AddGeometries(tmp...)
-		//t.AddGeometries(c...)
 	case interface{}:
-		t.AddGeometries(c.(Geometry))
-		//t.AddGeometries(c)
+		t.Geometries = append(t.Geometries, c.(Geometry))
 	default:
 		return fmt.Errorf("AssertionError %v", g)
 	}
